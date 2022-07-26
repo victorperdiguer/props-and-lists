@@ -1,0 +1,37 @@
+[
+  {
+    "_id": 1,
+    "name": "Bugs Bunny",
+    "type": "bunny",
+    "image": "https://resources.bestfriends.org/sites/default/files/styles/large/public/2018-12/Rabbit-behavior-Hopsing-658_2.jpg?itok=qpta6aUR",
+    "description": "This binny requires constant care, daily feeding and some maze entertainment",
+    "lifeExpectancy": 5,
+    "needsMedicine": false
+  },
+  {
+    "_id": 2,
+    "name": "Whiskers",
+    "type": "cat",
+    "image": "https://media.npr.org/assets/img/2021/08/11/gettyimages-1279899488_wide-f3860ceb0ef19643c335cb34df3fa1de166e2761-s1100-c50.jpg",
+    "description": "This cat likes to hang out alone",
+    "lifeExpectancy": 16,
+    "needsMedicine": true
+  },
+  {
+    "_id": 3,
+    "name": "Snoopy",
+    "type": "dog",
+    "description": "This dogs has been through hell and more, he deserves a happy life",
+    "lifeExpectancy": 12,
+    "needsMedicine": true
+  },
+  {
+    "_id": 4,
+    "name": "Snoopy",
+    "type": "dog",
+    "image": "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iyRWcdIqVMks/v0/1200x-1.jpg",
+    "description": "This dogs has been through hell and beyond",
+    "lifeExpectancy": 14,
+    "needsMedicine": false
+  }
+]

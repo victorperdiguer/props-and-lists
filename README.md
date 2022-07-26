@@ -1,70 +1,181 @@
-# Getting Started with Create React App
+# Props, lists and events 🐾
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+In this repo you will practise everything covered today.
 
-## Available Scripts
+The project was done with <code>create-react-app</code>, so you just need to run:
 
-In the project directory, you can run:
+```bash
+npm install
+npm run start
+```
 
-### `npm start`
+## Iteration 1: Print the cards 🧾
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+On <code>App.jsx</code>:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Import the hook **useState** and create an "animals" state, with the "setAnimals" updater function. Its initial value should be the animalData array that's already imported from the JSON on App.jsx.
+- Use the .map() method to print one card for each animal of the array. Check the <code>Card</code> component to see how the component expects the props.
+- ⚠️ Remember that each element inside a map should have a unique key property ⚠️
 
-### `npm test`
+<details>
+<summary>Click here ONLY if you need to see the solution</summary>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```js
+// App.jsx
 
-### `npm run build`
+import './App.css';
+import React, { useState } from 'react';
+import animalData from './data.json';
+import Card from './components/Card';
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+function App() {
+  const [animals, setAnimals] = useState(animalData);
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  return (
+    <div className="App">
+      <h1>Adopt me plz 🐾</h1>
+      {animals.map(elem => {
+        return <Card key={elem._id} animal={elem}/>
+      })}
+    </div>
+  );
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+export default App;
+```
 
-### `npm run eject`
+</details>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+----
+## Iteration 2: Conditional rendering 🎯
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+You will see that some animals don't have an image, and this is the visual result:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+![](brokenimg.png)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+We can fix it by using conditional rendering on <code>Card.jsx</code>:
 
-## Learn More
+- If the data coming to the Card has a key "image" (if "image" exists), it should display its image, but if it doesn't, it should display this default image: [https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Dog_silhouette.svg/2067px-Dog_silhouette.svg.png](https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Dog_silhouette.svg/2067px-Dog_silhouette.svg.png)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Also, **some animals need medicine**, and its important that you add that information in the Card. This information should appear in color red. 💡 You have a class *red-color* ready for that.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+<details>
+<summary>Click here ONLY if you need to see the solution</summary>
 
-### Code Splitting
+```js
+// components/Card.jsx
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+import React from 'react'
 
-### Analyzing the Bundle Size
+export default function Card(props) {
+  const { animal: { name, lifeExpectancy, description, needsMedicine, image } } = props;
+  
+  return (
+    <div className="card">
+      <h3>{name}</h3>
+      {image ? <img src={image} alt={name} width="100%"/> : 
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Dog_silhouette.svg/2067px-Dog_silhouette.svg.png" alt={name} width="100%" />}
+      <p>{description}</p>
+      <p>This animal will live {lifeExpectancy} years</p>
+      {needsMedicine && <p className="red-color">This animal needs medicine</p>}
+    </div>
+  )
+}
+```
+</details>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## Sort by life expectancy
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+On <code>App.jsx</code>:
 
-### Advanced Configuration
+- Create a function called handleSortByLife
+- This function should sort the animals array and update the state with a new array, sorted by life expectancy from less years to more years
+- Add a button to your app that, when clicked, whill trigger the "handleSortByLife". When creating the button, remember that you have a class for it called *action-btn*.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+<details>
+<summary>Click here ONLY if you need to see the solution</summary>
 
-### Deployment
+```js
+// App.jsx
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+function App() {
+  const [animals, setAnimals] = useState(animalData);
 
-### `npm run build` fails to minify
+  const handleSortByLife = () => {
+    const ordered = [...animals].sort((a, b) => a.lifeExpectancy - b.lifeExpectancy)
+    setAnimals(ordered);
+  }
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+  return (
+    <div className="App">
+      <h1>Adopt me plz 🐾</h1>
+      <button onClick={handleSortByLife} className="action-btn">Sort by life expectancy</button>
+      {animals.map(elem => {
+        return <Card key={elem._id} animal={elem}/>
+      })}
+    </div>
+  );
+}
+```
+</details>
+
+---
+## Filter dogs
+
+On <code>App.jsx</code>:
+
+Now we want another button that, when clicked, will filter the animals and return **only the dogs**. Try to do that without further instructions and, when you are finished, check at the solution.
+
+You can do it!!! 💪🏼
+
+<details>
+<summary>Click here to see the solution</summary>
+
+```js
+// App.jsx
+
+import './App.css';
+import React, { useState } from 'react';
+import animalData from './data.json';
+import Card from './components/Card';
+
+function App() {
+  const [animals, setAnimals] = useState(animalData);
+
+  const handleSortByLife = () => {
+    const ordered = [...animals].sort((a, b) => a.lifeExpectancy - b.lifeExpectancy)
+    setAnimals(ordered);
+  }
+
+  const handleFilterDogs = () => {
+    const filtered = animals.filter(elem => elem.type === "dog");
+    setAnimals(filtered);
+  }
+
+  return (
+    <div className="App">
+      <h1>Adopt me plz 🐾</h1>
+      <button onClick={handleSortByLife} className="action-btn">Sort by life expectancy</button>
+      <button onClick={handleFilterDogs} className="action-btn">See only dogs</button>
+      {animals.map(elem => {
+        return <Card key={elem._id} animal={elem}/>
+      })}
+    </div>
+  );
+}
+
+export default App;
+```
+</details>
+
+All done ✅
+
+
+
+
+
+
+
+
